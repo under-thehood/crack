@@ -1,0 +1,68 @@
+[TOKENS]
+    TOK_IDENTIFIER : [a-z] | [A-Z] | _
+    TOK_NUMBER     : [0-9] 
+
+    TOK_LET    : let
+    TOK_FN     : fn
+    TOK_IMPORT : import
+    TOK_STRUCT : struct
+    TOK_DEFER  : defer
+    TOK_MATCH  : match
+
+    TOK_PLUS   : +
+    TOK_MINUS  : -
+    TOK_STAR   : *
+    TOK_FORWARD_SLASH : /
+
+    TOK_PAREN_OPEN  : (
+    TOK_PAREN_CLOSE : )
+    TOK_CURLY_OPEN  : {
+    TOK_CURLY_CLOSE : }
+    TOK_COLON       : :
+    TOK_EQUAL       : =
+
+    TOK_EOF
+    TOK_NEWLINE
+
+[GRAMMARS]
+    PROGRAM           : [GLOBAL STATEMENT]
+
+    // NO GLOBAL VARIABLE
+    GLOBAL STATEMENT  : [IMPORT STATEMENT]    
+                        |   [FUNCTION DEFINATION] 
+                        |   [STRUCT DEFINATION]    
+
+    IMPORT STATEMENT  : TOK_IMPORT [PACKAGE NAME] TOK_NEWLINE
+    PACKAGE NAME      : TOK_IDENTIFIER | TOK_IDENTIFIER.[PACKAGE NAME]
+
+     
+    VARIABLE PROTOTYPE     : TOK_IDENTIFIER TOK_COLON TOK_IDENTIFIER{data types}
+    STRUCT DEFINATION      : TOK_STRUCT TOK_IDENTIFIER 
+                             TOK_CURLY_OPEN
+                             [STRUCT BODY DEFINATION] 
+                             TOK_CURLY_CLOSE
+
+    STRUCT BODY DEFINATION : [VARIABLE PROTOTYPE]                                   //Single variable 
+                             |  [STRUCT BODY DEFINATION] , [VARIABLE PROTOTYPE]     //Multiple variable
+                        
+    
+    FUNCTION DEFINATION     : [FUNCTION PROTOTYPE] [FUNCTION BODY]
+    FUNCTION PAREMETER      : [VARIABLE PROTOTYPE]                               //Single Parameter
+                              |  [FUNCTION PAREMETER] , [VARIABLE PROTOTYPE]     //Multiple Parameter
+    FUNCTION PROTOTYPE      : TOK_FN TOK_IDENTIFIER TOK_PAREN_OPEN [FUNCTION PAREMETER] TOK_PAREN_CLOSE
+                              TOK_CURLY_OPEN
+                              [FUNCTION BODY]
+                              TOK_CURLY_CLOSE
+    
+    FUNCTION BODY           : [STATEMENTS]
+    STATEMENTS              : [ASSIGNMENT] 
+
+    EXPRESSION              : TOK_NUMBER
+                              |   TOK_IDENTIFIER 
+    ASSIGNMENT              : TOK_LET [VARIABLE PROTOTYPE] TOK_EQUAL [EXPRESSION]
+
+    
+
+
+
+
