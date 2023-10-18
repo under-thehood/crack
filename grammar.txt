@@ -3,7 +3,7 @@
     TOK_NUMBER     : [0-9] 
 
     TOK_LET    : let
-    TOK_FN     : fn
+    TOK_FN     : fun
     TOK_IMPORT : import
     TOK_STRUCT : struct
     TOK_DEFER  : defer
@@ -20,6 +20,7 @@
     TOK_CURLY_CLOSE : }
     TOK_COLON       : :
     TOK_EQUAL       : =
+    TOK_COMMA       : ,
 
     TOK_EOF
     TOK_NEWLINE
@@ -54,12 +55,32 @@
                               [FUNCTION BODY]
                               TOK_CURLY_CLOSE
     
-    FUNCTION BODY           : [STATEMENTS]
+    FUNCTION BODY           : [STATEMENTS] | [EXPRESSION]
     STATEMENTS              : [ASSIGNMENT] 
 
-    EXPRESSION              : TOK_NUMBER
-                              |   TOK_IDENTIFIER 
-    ASSIGNMENT              : TOK_LET [VARIABLE PROTOTYPE] TOK_EQUAL [EXPRESSION]
+    EXPRESSION              : [TERM EXPRESSION]
+
+    TERM OPERATORS          : TOK_PLUS
+                              | TOK_MINUS
+    TERM EXPRESSION         : [FACTOR EXPRESSION]
+                              | [TERM EXPRESSION] [TERM OPERATORS] [FACTOR EXPRESSION]
+
+    FACTOR OPERATORS        : TOK_STAR
+                              | TOK_FORWARD_SLASH
+    FACTOR EXPRESSION       : [PRIMARY EXPRESSION]
+                              | [FACTOR EXPRESSION] [FACTOR OPERATORS] [PRIMARY EXPRESSION]
+
+    ARGUMENTS               : [EXPRESSION] 
+                              |  [EXPRESSION] TOK_COMMA [ARGUMENTS]
+
+
+    PRIMARY EXPRESSION      : TOK_NUMBER
+                              | TOK_IDENTIFIER 
+                              | TOK_IDENTIFIER TOK_PAREN_OPEN [ARGUMENTS] TOK_PAREN_CLOSE
+                              | TOK_IDENTIFIER TOK_PAREN_OPEN TOK_PAREN_CLOSE
+                              | TOK_PAREN_OPEN [EXPRESSION] TOK_PAREN_CLOSE
+    
+    ASSIGNMENT              : TOK_LET [VARIABLE PROTOTYPE] TOK_EQUAL [EXPRESSION] TOK_NEWLINE
 
     
 

@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "parser.h": "c",
+        "cli_handler.h": "c",
+        "error.h": "c",
+        "fileio.h": "c"
+    }
+}
